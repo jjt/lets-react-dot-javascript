@@ -1,0 +1,20 @@
+{
+  "name": "lets-react-dot-javascript-and-so-are-you",
+  "version": "0.0.0",
+  "homepage": "http://jjt.io/lets-react-dot-javascript-and-so-are-you",
+  "authors": [
+    "Jason Trill <jason@jasontrill.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "reveal.js": "~3.0.0"
+  }
+}
