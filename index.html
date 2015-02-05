@@ -5,6 +5,7 @@
   <title>Let's React dot Javascript and SO ARE YOU!</title>
   <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.css"/>
   <link rel="stylesheet" href="bower_components/reveal.js/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="bower_components/reveal.js/lib/css/zenburn.css"/>
   <style>
     body {
       font-family: "Helvetica Neue", Arial, sans-serif;
@@ -18,15 +19,176 @@
 <body>
   <div class="reveal">
     <div class="slides">
+
+
       <section>
         <h1 class="hero">Let's React dot Javascript and SO ARE YOU!</h1>
+        <center>By Jonathan Taylor Thomas</center>
       </section>
+
+
 
       <section data-markdown>
         <script type="text/template">
-          #Hi, I'm Jonathan Taylor Thomas
+# About React
         </script>
       </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## React is...
+<ul>
+<li class="fragment">An open-source JS library for building UIs</li>
+<li class="fragment">Used as the V in MVC</li>
+<li class="fragment">Made by Facebook and used in production at scale</li>
+</ul>
+
+<span class="fragment"><strong>
+But! it is not a framework (Angular, Ember, etc)
+</strong></span>
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Why React?
+<ul>
+<li class="fragment"> Performance (JS is fast, the DOM is a world of sadness) </li>
+<li class="fragment"> React components are easy to reason about </li>
+<li class="fragment"> Small API surface area </li>
+<li class="fragment"> Server-side rendering (isomorphic applications) </li>
+<li class="fragment"> Makes data flow and application state explicit </li>
+</ul>
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## React components
+React components are building blocks of ecapsulated data, markup and behaviour. They can be as simple as just an _object_ with a `render` method:
+```js
+var SimpleComponent = React.createClass({
+  render: function() {
+    return <div>I'm a simple component!</div>
+  }
+});
+
+React.render(<SimpleComponent/>, $("#app"));
+```
+
+This is a complete React app that will render into the `#app` element on our page.
+
+<p class="fragment">Of course, React components can do more, but first let me adress...</p>
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+#MARKUP IN JS?!?!?!???
+![](http://i.imgur.com/O3Iliv1l.jpg)
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## JSX
+Adds support of HTML-like markup language to JS, uses compiliaton to desugar into native `React.createElement` calls:
+
+
+```js
+var SimpleComponent = React.createClass({
+  render: function() {
+    return <div>I'm a simple component!</div>
+  }
+});
+
+React.render(<SimpleComponent/>, $("#app"));
+```
+
+Compiles to
+
+```js
+var SimpleComponent = React.createClass({
+  displayName: "SimpleComponent",
+  render: function() {
+    return React.createElement("div", null, "I'm a simple component");
+  }
+});
+
+React.render(React.createElement(SimpleComponent, {},), $("#app"));
+```
+
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Advantages of JSX
+
+* Almost identical to HTML (familiarity)
+* Less verbose/clunky syntax
+* Takes care of boilerplate (ex. calling `React.createElement`, setting `displayName`)
+* [CJSX](https://github.com/jsdf/coffee-react) for people who like CoffeeScript (such as me)
+
+[More info on JSX](http://facebook.github.io/react/docs/jsx-in-depth.html), and some [gotchas](http://facebook.github.io/react/docs/jsx-gotchas.html)
+
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+
+        </script>
+      </section>
+
+
+
     </div>
 
   </div>
@@ -35,7 +197,11 @@
   <script src="bower_components/reveal.js/js/reveal.js"></script>
   <script>
     Reveal.initialize({
-       dependencies: [
+      controls: false,
+      width: 1280,
+      margin: 0.1,
+      history: true,
+      dependencies: [
         // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
         { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
 
@@ -46,18 +212,9 @@
         // Syntax highlight for <code> elements
         { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 
-        // Zoom in and out with Alt+click
-        { src: 'bower_components/reveal.js/plugin/zoom-js/zoom.js', async: true },
-
         // Speaker notes
         { src: 'bower_components/reveal.js/plugin/notes/notes.js', async: true },
-
-        // Remote control your reveal.js presentation using a touch device
-        { src: 'bower_components/reveal.js/plugin/remotes/remotes.js', async: true },
-
-        // MathJax
-        { src: 'bower_components/reveal.js/plugin/math/math.js', async: true }
-      ] 
+      ]
     });
   </script>
 </body>
