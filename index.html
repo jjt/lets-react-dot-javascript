@@ -72,9 +72,9 @@ But! it is not a framework (Angular, Ember, etc)
 ## Why React?
 <ul>
 <li> React components are easy to reason about</li>
+<li class="fragment"> Conceptually simple, less time spent learning framework/lib</li>
 <li class="fragment">  Makes data flow and application state explicit </li>
 <li class="fragment"> Makes efficient rendering an implementation detail </li>
-<li class="fragment"> Conceptually simple, less time spent learning framework/lib</li>
 <li class="fragment"> Plays well with immutable data structures</li>
 <li class="fragment"> Server-side rendering (isomorphic applications) </li>
 </ul>
@@ -135,7 +135,7 @@ There's more to React components, but first... <!-- .element: class="fragment" -
       <section data-markdown class=center>
         <script type="text/template">
 #MARKUP IN JS?!?!?!???
-![](http://i.imgur.com/WB7I8I3.jpg)
+![](http://i.imgur.com/9azOMl1l.jpg)
         </script>
       </section>
 
@@ -209,7 +209,7 @@ We're going to keep using JSX
 Called at certain points, useful as hooks ([more info here](http://facebook.github.io/react/docs/component-specs.html))
 
 <div class="fragment">
-Initial mounting of a component (called in order):
+Initial render of a component (called in order):
 <pre><code class="js hljs">getDefaultProps     // Default props, return as obj
 getInitialState     // Initial state, return as obj - can access this.props here
 componentWillMount  // Before initial render
@@ -424,7 +424,8 @@ Renders:
 ## More about events
 * Synthetic event system that mirrors true DOM events (names, propagation, etc)
 <li class="fragment">Auto-binds event handlers to `this`</li>
-* Uses event delegation instead of attaching events to components <!-- .element: class="fragment" -->
+* Uses event delegation instead of attaching events to components - better
+performance, no event handlers to clean up<!-- .element: class="fragment" -->
         </script>
       </section>
 
@@ -439,12 +440,12 @@ Renders:
       <section data-markdown>
         <script type="text/template">
 ## Props vs State
-* Best to keep components stateless and pass things down as props
+* A component's props should be treated as immutable
+* A component's state is mutable but only by itself
+* Either getting new props or mutating state will automatically re-render <!-- .element: class="fragment" -->
+* Best to keep components stateless and pass things down as props <!-- .element: class="fragment" -->
 * Large React apps often use stateful wrapper components to track pieces of app state
 and pass them as props into stateless components <!-- .element: class="fragment" -->
-* Either getting new props or mutating state will automatically re-render <!-- .element: class="fragment" -->
-* A component's props should be treated as immutable, state is mutable but only by
-that component <!-- .element: class="fragment" -->
 * Keep state where it makes sense (sometimes localised, sometimes at top app level) <!-- .element: class="fragment" -->
         </script>
       </section>
@@ -474,7 +475,7 @@ var Group = React.createClass({
   render: function() {
     return (
       <div>
-        <Person name="Bertie" key="Bertie"/>
+        <Person name="Bertie" greeting="Hullo!" key="Bertie"/>
         <Person name="Jeeves" greeting="Sir?" key="Jeeves"/>
       </div>
     );
@@ -492,6 +493,26 @@ Renders:
         </script>
       </section>
 
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## The `key` prop
+Lets React uniquely identify an element - if missing, uses array index
+
+<p class="fragment">
+If `key` is same on next render, React reuses component and passes new props,
+existing state is preserved (props/state change lifecycle)
+</p>
+
+<p class="fragment">
+If `key` is different, renders as new component (initial render lifecycle)
+</p>
+
+        </script>
+      </section>
 
 
 
@@ -519,7 +540,7 @@ var people = [
 
 React.render(<Group people={people} />, $("#app"));
 ```
-Renders same as last slide
+Renders same as previous Nested Components slide
         </script>
       </section>
 
@@ -542,7 +563,7 @@ var Group = React.createClass({
 });
 
 var people = [
-  {name: "Bertie", greeting: "Hullo"},
+  {name: "Bertie", greeting: "Hullo!"},
   {name: "Jeeves", greeting: "Sir?"}
 ];
 
@@ -551,10 +572,12 @@ var peopleItems = people.map(function(personData) {
 });
 React.render(<Group>{peopleItems}</Group>, $("#app"));
 ```
-Renders same as last slide
+Renders same as previous Nested Components slide
 
         </script>
       </section>
+
+
 
 
 
@@ -592,8 +615,7 @@ React.render(<Group people={people} />, $("#app"));
       <section data-markdown>
         <script type="text/template">
 # Mixins and React.addons
-Extra junk and stuff
-
+Junkus in your trunkus
         </script>
       </section>
 
@@ -606,8 +628,8 @@ Extra junk and stuff
       <section data-markdown>
         <script type="text/template">
 ## Mixins
-* Address cross-cutting concerns (show d3 graph from data)
-* POJOs that components extend <!-- .element: class="fragment" -->
+* POJOs that components extend
+* Address cross-cutting concerns (show d3 graph from data) <!-- .element: class="fragment" -->
 * If mixins implement lifecycle methods, they each get called in order <!-- .element: class="fragment" -->
 
 <pre><code class="js hljs fragment">var LogComponentDidMount = {
@@ -679,8 +701,7 @@ De-facto routing solution, ported over from Ember's router
 
 
 ```js
-// Define App, Inbox, InboxStats, Message, Calendar, and Dashboard components here
-
+// Components: App, Inbox, InboxStats, Message, Calendar, Dashboard
 var routes = (
   <Route handler={App}>
     <Route name="inbox" handler={Inbox}>
@@ -698,8 +719,59 @@ Router.run(routes, function (Handler) {
 ```
 
 More info on [Github](https://github.com/rackt/react-router/blob/master/docs/guides/overview.md),
-and a [presentation from React.js Conf](https://www.youtube.com/watch?v=XZfvW1a8Xac). 
+and a [presentation from React.js Conf](https://www.youtube.com/watch?v=XZfvW1a8Xac)
 
+        </script>
+      </section>
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+# Flux Application Architecture
+Unidirection data flow, suited for use with React
+
+        </script>
+      </section>
+
+
+
+
+      <section data-markdown class="center">
+        <script type="text/template">
+![](http://i.imgur.com/j7zSFga.png)
+        </script>
+      </section>
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Flux implementations
+Flux just an architecture, many implementations ([comparison article](https://reactjsnews.com/the-state-of-flux/))
+<li>Reflux <a href="https://github.com/spoike/refluxjs">https://github.com/spoike/refluxjs</a></li>
+<li>Barracks <a href="https://github.com/yoshuawuyts/barracks">https://github.com/yoshuawuyts/barracks</a></li>
+<li>Delorean <a href="http://deloreanjs.com/">http://deloreanjs.com/</a></li>
+<li>Fluxy <a href="https://github.com/jmreidy/fluxy">https://github.com/jmreidy/fluxy</a></li>
+<li>Fluxxor <a href="http://fluxxor.com/">http://fluxxor.com/</a></li>
+<li>McFly <a href="http://kenwheeler.github.io/mcfly/">http://kenwheeler.github.io/mcfly/</a></li>
+
+My money's on Fluxxor (true to FB Flux) or Reflux (strays from FB Flux, but simpler)
+        </script>
+      </section>
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Flux resources
+* https://scotch.io/tutorials/getting-to-know-flux-the-react-js-architecture
+* https://egghead.io/series/react-flux-architecture
+* http://facebook.github.io/flux/docs/overview.html
+* http://facebook.github.io/flux/docs/todo-list.html
         </script>
       </section>
 
@@ -721,8 +793,8 @@ Use React to write iOS apps with native UI components
       <section data-markdown>
         <script type="text/template">
 ## React Native Overview
-* Runs React in JavaScriptCore with async bridge to main ObjC thread
-* React components look the same but JSX targets iOS elements instead of DOM elements <!-- .element: class="fragment" -->
+* Runs React in JavaScriptCore thread, async bridge to main thread
+* Components same, but JSX targets iOS instead of DOM elements <!-- .element: class="fragment" -->
 * Implements subset of CSS+Flexbox for layout/styles <!-- .element: class="fragment" -->
 <li class="fragment">File watcher reloads app within a second 
   ([demo](https://www.youtube.com/watch?v=7rDsRXj9-cU&list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr#t=1339))
@@ -741,6 +813,19 @@ Use React to write iOS apps with native UI components
 
 
 
+      <section data-markdown class="center">
+        <script type="text/template">
+
+![](http://i.imgur.com/XZC5pYzl.jpg)
+
+And that's React.js - thanks for coming
+
+        </script>
+      </section>
+
+
+
+
 
 
 			</div>
@@ -756,7 +841,7 @@ Use React to write iOS apps with native UI components
 			// https://github.com/hakimel/reveal.js#configuration
 			Reveal.initialize({
 				controls: false,
-				progress: true,
+				progress: false,
 				history: true,
 				center: true,
         width: 1280,
