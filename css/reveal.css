@@ -1147,12 +1147,12 @@ body {
  *********************************************/
 .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
   margin: 0 0 20px 0;
-  color: #aaaaae;
+  color: #bbbbbe;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   font-weight: 500;
   line-height: 1;
   letter-spacing: normal;
-  text-transform: uppercase;
+  text-transform: none;
   text-shadow: none;
   word-wrap: break-word; }
 
@@ -1369,3 +1369,13 @@ body {
 
 section.center {
   text-align: center; }
+
+.reveal p code, .reveal li code {
+  line-height: 1;
+  font-size: 0.9em; }
+
+.reveal pre code {
+  max-height: 500px; }
+
+.reveal h1 {
+  margin-left: -8px; }

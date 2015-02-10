@@ -50,20 +50,13 @@
 
       <section data-markdown>
         <script type="text/template">
-# About React
-        </script>
-      </section>
-
-
-
-      <section data-markdown>
-        <script type="text/template">
 ## React is...
 <ul>
 <li>An open-source JS library for building UIs</li>
 <li class="fragment">Used as the V in MV* (standalone or with other frameworks)</li>
-<li class="fragment">15,500 GH stars, nearly 300 contributors</li>
 <li class="fragment">Made by Facebook and used in production</li>
+<li class="fragment">Compatible down to IE8</li>
+<li class="fragment">15,500 GH stars, nearly 300 contributors</li>
 </ul>
 
 <span class="fragment"><strong>
@@ -78,10 +71,11 @@ But! it is not a framework (Angular, Ember, etc)
         <script type="text/template">
 ## Why React?
 <ul>
-<li> Makes data flow and application state explicit </li>
-<li class="fragment"> React components are easy to reason about </li>
-<li class="fragment"> Small API surface area </li>
-<li class="fragment"> Performance (JS is fast, the DOM is a world of sadness) </li>
+<li> React components are easy to reason about</li>
+<li class="fragment">  Makes data flow and application state explicit </li>
+<li class="fragment"> Makes efficient rendering an implementation detail </li>
+<li class="fragment"> Conceptually simple, less time spent learning framework/lib</li>
+<li class="fragment"> Plays well with immutable data structures</li>
 <li class="fragment"> Server-side rendering (isomorphic applications) </li>
 </ul>
         </script>
@@ -90,6 +84,7 @@ But! it is not a framework (Angular, Ember, etc)
       <section data-markdown>
         <script type="text/template">
 # React Components
+The building blocks of React applications
         </script>
       </section>
 
@@ -99,10 +94,10 @@ But! it is not a framework (Angular, Ember, etc)
         <script type="text/template">
 ## About components
 * Components ecapsulate data, behaviour, and markup
-* Nestable, composable <!-- .element: class="fragment" -->
 <li class="fragment"> Component data is _properties_ and _state_</li>
 <li class="fragment"> Whenever _props_ or _state_ change, component(s) re-render</li>
 * Efficient renders due to virtual DOM + diffing <!-- .element: class="fragment" -->
+* Nestable, composable <!-- .element: class="fragment" -->
 
 
         </script>
@@ -187,7 +182,7 @@ React.render(React.createElement(SimpleComponent, {},), $("#app"));
 <li class="fragment" data-fragment-index=5> [CJSX](https://github.com/jsdf/coffee-react) for JSX + CoffeeScript, or [6to5](https://github.com/6to5/6to5) for JSX + ES6</li>
 
 <p class="fragment" data-fragment-index=10>
-  __Disadvantages__: looks weird, needs compilation. You get used to the look, and most people use build tools anyway (Gulp, Grunt, Webpack, etc)
+  __Disadvantages__: Looks weird, needs compilation - not problems in practice
 </p>
 
 <p class="fragment" data-fragment-index=10>[More info on JSX](http://facebook.github.io/react/docs/jsx-in-depth.html), and some [gotchas](http://facebook.github.io/react/docs/jsx-gotchas.html)</p>
@@ -198,9 +193,48 @@ React.render(React.createElement(SimpleComponent, {},), $("#app"));
 
       <section data-markdown>
         <script type="text/template">
-# Back to components...
+# Back to Components
+We're going to keep using JSX
         </script>
       </section>
+
+
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+##Component lifecycle methods
+Called at certain points, useful as hooks ([more info here](http://facebook.github.io/react/docs/component-specs.html))
+
+<div class="fragment">
+Initial mounting of a component (called in order):
+<pre><code class="js hljs">getDefaultProps     // Default props, return as obj
+getInitialState     // Initial state, return as obj - can access this.props here
+componentWillMount  // Before initial render
+render              // Initial render
+componentDidMount   // After initial render (ex. init jQuery plugin)</code></pre>
+</div>
+
+<div class="fragment">
+On change of _props_ or _state_ (called in order):
+<pre><code class="js hljs">componentWillReceiveProps(obj nextProps)             // Only if props change
+shouldComponentUpdate(obj nextProps, obj nextState)  // Return false to abort re-render
+componentWillUpdate(obj nextProps, obj nextState)    // Do things right before re-render
+render                                               // Re-render component
+componentDidUpdate(obj prevProps, obj prevState)     // Re-trigger any DOM code (jQ plugs)
+</code></pre>
+</div>
+
+<div class="fragment">
+When component leaves the DOM, `componentWillUnmount` is called
+</div>
+        </script>
+      </section>
+
+
+
 
 
 
@@ -210,7 +244,7 @@ React.render(React.createElement(SimpleComponent, {},), $("#app"));
 ## Component properties
 
 Component _properties_ are passed in like HTML attributes, should be treated
-as immutable after component instantiaion
+as immutable after component instantiation
 
 ```
 var Person = React.createClass({
@@ -260,12 +294,12 @@ Renders:
       <section data-markdown>
         <script type="text/template">
 ## Property validation
-Development-time propery checks ([lots of them](http://facebook.github.io/react/docs/reusable-components.html#prop-validation))
+React offers development-time property checks ([lots of them](http://facebook.github.io/react/docs/reusable-components.html#prop-validation))
 ```js
 Person = React.createClass({
   propTypes: {
-    name: React.proptypes.string.isRequired, //Required
-    greeting: React.proptypes.string //Optional
+    name: React.PropTypes.string.isRequired, //Required
+    greeting: React.PropTypes.string //Optional
   },
   //...
 });
@@ -323,8 +357,8 @@ Renders:
       <section data-markdown>
         <script type="text/template">
 ## Component state (cont)
-Can access properties in `getInitialState`, but should do so sparingly and make explicit
-that it's just the initial state (often a code smell)
+Can access properties in `getInitialState`, but often an anti-pattern and should 
+do so sparingly and explicitly just to set initial state
 ```js
 var PersonWithStomach = React.createClass({
   getInitialState: function() {
@@ -347,33 +381,10 @@ Renders:
 
 
 
-
-
-
-
       <section data-markdown>
         <script type="text/template">
-## Props vs state
-* Best to keep components stateless and pass things down as props 
-* Getting new props or mutating state will automatically re-render
-* A component's props should be treated as immutable, state is mutable but only by
-that component
-* Keep state where it makes sense (sometimes localised, sometimes at top app level)
-* Facebook often uses stateful wrapper components to track pieces of app state
-and pass them as props into stateless components
-        </script>
-      </section>
-
-
-
-
-
-
-
-      <section data-markdown>
-        <script type="text/template">
-## Mutating state, component events
-User events good candidates for state mutation with `this.setState()`
+## Mutating state
+Use `this.setState(obj nextState)`
 
 ```js
 var PersonWithStomach = React.createClass({
@@ -383,9 +394,9 @@ var PersonWithStomach = React.createClass({
   },
   render: function () {
     return <div onClick={this.handleClick}>
-              My name is {this.props.name} and I
-              { this.state.isHungry ? "would love some food" : "am full, thanks" }
-            </div>;
+             My name is {this.props.name} and I
+             { this.state.isHungry ? "would love some food" : "am full, thanks" }
+           </div>;
   }
 });
 React.render(<PersonWithStomach name="Bertie"/>, $("#app"));
@@ -393,7 +404,7 @@ React.render(<PersonWithStomach name="Bertie"/>, $("#app"));
 Renders:
 ```html
 <div>My name is Bertie and I would love some food</div>
-<!-- click on the div, then it would be... -->
+<!-- after clicking on our component... -->
 <div>My name is Bertie and I am full, thanks</div>
 ```
 
@@ -404,33 +415,16 @@ Renders:
 
 
 
+
+
+
+
       <section data-markdown>
         <script type="text/template">
-##Component lifecycle methods
-Called at certain points, useful as hooks ([more info here](http://facebook.github.io/react/docs/component-specs.html))
-
-<div class="fragment">
-Initial rendering of a component (called in order):
-<pre><code class="js hljs">getDefaultProps     // Default props
-getInitialState     // Return obj representing initial state, can access this.props
-componentWillMount  // Before initial render
-render              // Initial render
-componentDidMount   // After initial render (ex. init jQuery plugin)</code></pre>
-</div>
-
-<div class="fragment">
-On change of _props_ or _state_ (called in order):
-<pre><code class="js hljs">componentWillReceiveProps(obj nextProps)             // Only if props change
-shouldComponentUpdate(obj nextProps, obj nextState)  // Return false to abort re-render
-componentWillUpdate(obj nextProps, obj nextState)    // Do things right before re-render
-render                                               // Re-render component
-componentDidUpdate(obj prevProps, obj prevState)     // Re-trigger any DOM code (jQ plugs)
-</code></pre>
-</div>
-
-<div class="fragment">
-When component leaves the DOM, `componentWillUnmount` is called
-</div>
+## More about events
+* Synthetic event system that mirrors true DOM events (names, propagation, etc)
+<li class="fragment">Auto-binds event handlers to `this`</li>
+* Uses event delegation instead of attaching events to components <!-- .element: class="fragment" -->
         </script>
       </section>
 
@@ -440,22 +434,53 @@ When component leaves the DOM, `componentWillUnmount` is called
 
 
 
+
+
       <section data-markdown>
         <script type="text/template">
-## Nested Components
+## Props vs State
+* Best to keep components stateless and pass things down as props
+* Large React apps often use stateful wrapper components to track pieces of app state
+and pass them as props into stateless components <!-- .element: class="fragment" -->
+* Either getting new props or mutating state will automatically re-render <!-- .element: class="fragment" -->
+* A component's props should be treated as immutable, state is mutable but only by
+that component <!-- .element: class="fragment" -->
+* Keep state where it makes sense (sometimes localised, sometimes at top app level) <!-- .element: class="fragment" -->
+        </script>
+      </section>
 
-Components can include other components:
+
+
+      <section data-markdown>
+        <script type="text/template">
+# Multiple Components
+Because single-component applications are boring
+
+        </script>
+      </section>
+
+
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Nested components
+
+Components can include other components explicitly
 ```
-var GroupOne = React.createComponent({
+var Group = React.createClass({
   render: function() {
-    return
+    return (
       <div>
-        <Person name="Bertie"/>
-        <Person name="Jeeves" greeting="Sir?"/>
-      </div>;
+        <Person name="Bertie" key="Bertie"/>
+        <Person name="Jeeves" greeting="Sir?" key="Jeeves"/>
+      </div>
+    );
   }
 });
-React.render(<GroupOne/>, $("#app"));
+React.render(<Group/>, $("#app"));
 ```
 Renders:
 ```html
@@ -470,75 +495,214 @@ Renders:
 
 
 
+
+
       <section data-markdown>
         <script type="text/template">
-## Nested Components (cont)
-Components can also render their children:
+##Nested components (cont)
+Or by creating an array of components
+```js
+var Group = React.createClass({
+  getDefaultProps: function() { return {people: []} },
+  render: function() {
+    var peopleItems = this.props.people.map(function(personData) {
+      return <Person {...personData} key={personData.name}/>;
+    });
+    return <div>{peopleItems}</div>;
+  }
+});
+
+var people = [
+  {name: "Bertie", greeting: "Hullo!"},
+  {name: "Jeeves", greeting: "Sir?"}
+];
+
+React.render(<Group people={people} />, $("#app"));
 ```
-var GroupTwo = React.createComponent({
+Renders same as last slide
+        </script>
+      </section>
+
+
+
+
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Nested components (cont)
+Components can also render their children (explicit or array):
+```js
+var Group = React.createClass({
   render: function() {
     return <div>{this.props.children}</div>;
   }
 });
-React.render(
-  <GroupTwo>
-    <Person name="Bertie" greeting="Hullo!"/>
-    <Person name="Jeeves" greeting="Sir?"/>
-  </GroupTwo>,
-  $("#app")
-);
+
+var people = [
+  {name: "Bertie", greeting: "Hullo"},
+  {name: "Jeeves", greeting: "Sir?"}
+];
+
+var peopleItems = people.map(function(personData) {
+  return <Person {...personData} key={personData.name}/>;
+});
+React.render(<Group>{peopleItems}</Group>, $("#app"));
 ```
-Renders:
-```html
-<div>
-  <div>Hullo! My name is Bertie</div>
-  <div>Sir? My name is Jeeves</div>
-</div>
-```
+Renders same as last slide
 
         </script>
       </section>
 
 
 
+
       <section data-markdown>
         <script type="text/template">
-##Nested Components (cont)
-Or by passing data through a property:
+## Component communication
+For parent->child, pass props; for child->parent, pass a callback:
 ```js
-var GroupThree = React.createComponent({
-  getDefaultProps: function() { return {people: []} },
+var Group = React.createClass({
+  handlePersonClick: function(name) {
+    console.log(name + " was clicked");
+  },
   render: function() {
-    return
-      <div>
-        {this.props.people.map(function(personData, i) {
-          return <Person {...personData} key={personData.name}/>;
-        })}
-      </div>;
+    var peopleItems = this.props.people.map(function(personData) {
+      return <Person
+               {...personData}
+               key={personData.name}
+               onClick={this.handlePersonClick.bind(this, personData.name)}
+             />;
+    });
+
+    return <div>{peopleItems}</div>;
   }
 });
-var people = [{name: "Bertie"}, {name: "Jeeves", greeting: "Sir?"}];
+
+var people = [ /* same as last slide */ ];
 React.render(<Group people={people} />, $("#app"));
 ```
-Renders:
-```html
-<div>
-  <div>Hullo! My name is Bertie</div>
-  <div>Sir? My name is Jeeves</div>
-</div>
+        </script>
+      </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+# Mixins and React.addons
+Extra junk and stuff
+
+        </script>
+      </section>
+
+
+
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Mixins
+* Address cross-cutting concerns (show d3 graph from data)
+* POJOs that components extend <!-- .element: class="fragment" -->
+* If mixins implement lifecycle methods, they each get called in order <!-- .element: class="fragment" -->
+
+<pre><code class="js hljs fragment">var LogComponentDidMount = {
+  componentDidMount: function() {
+    console.log(this.displayName + ' did mount');
+  }
+}
+
+var ComponentWithMixin = React.createClass({
+  mixins: [LogComponentDidMount],
+  componentDidMount: function() { console.log("I mounted"); },
+  // ...
+});
+
+React.render(&lt;ComponentWithMixin/&gt;, $("#app"));
+
+// Console:
+// "ComponentWithMixin did mount"
+// "I mounted"
+</code></pre>
+
+        </script>
+      </section>
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## React.addons
+<ul>
+<li>
+  [PureRenderMixin](http://facebook.github.io/react/docs/pure-render-mixin.html):
+  Perf gain when `render` method is referentially transparent wrt.  props and state, which most components should be
+</li>
+<li class="fragment">
+  [LinkedStateMixin](http://facebook.github.io/react/docs/two-way-binding-helpers.html):
+  Links form element value to component state, can be passed through props to sync parent state with input value of child
+</li>
+<li class="fragment">
+  [ClassSet](http://facebook.github.io/react/docs/class-name-manipulation.html):
+  CSS class manipulation helper no string concatenation!
+</li>
+<li class="fragment">
+  [And more](http://facebook.github.io/react/docs/addons.html)
+  </li>
+
+        </script>
+      </section>
+
+
+      <section data-markdown>
+        <script type="text/template">
+# Routing with React Router
+De-facto routing solution, ported over from Ember's router
+
+        </script>
+      </section>
+
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## Overview of React Router
+* Nested routes match with handlers (React components)
+* Transitions between routes
+* Query params and dynamic segments
+
+
+```js
+// Define App, Inbox, InboxStats, Message, Calendar, and Dashboard components here
+
+var routes = (
+  <Route handler={App}>
+    <Route name="inbox" handler={Inbox}>
+      <Route name="message" path=":messageId" handler={Message}/>
+      <DefaultRoute handler={InboxStats}/>
+    </Route>
+    <Route name="calendar" handler={Calendar}/>
+    <DefaultRoute handler={Dashboard}/>
+  </Route>
+);
+
+Router.run(routes, function (Handler) {
+  React.render(<Handler/>, document.body);
+});
 ```
-        </script>
-      </section>
 
-
-
-
-      <section data-markdown>
-        <script type="text/template">
-
+More info on [Github](https://github.com/rackt/react-router/blob/master/docs/guides/overview.md),
+and a [presentation from React.js Conf](https://www.youtube.com/watch?v=XZfvW1a8Xac). 
 
         </script>
       </section>
+
 
 
 
@@ -547,10 +711,36 @@ Renders:
 
       <section data-markdown>
         <script type="text/template">
-
-
+#React Native
+Use React to write iOS apps with native UI components
         </script>
       </section>
+
+
+
+      <section data-markdown>
+        <script type="text/template">
+## React Native Overview
+* Runs React in JavaScriptCore with async bridge to main ObjC thread
+* React components look the same but JSX targets iOS elements instead of DOM elements <!-- .element: class="fragment" -->
+* Implements subset of CSS+Flexbox for layout/styles <!-- .element: class="fragment" -->
+<li class="fragment">File watcher reloads app within a second 
+  ([demo](https://www.youtube.com/watch?v=7rDsRXj9-cU&list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr#t=1339))
+</li>
+<li class="fragment">
+  Can use browser to run the JS, connect with simulator ([demo](https://www.youtube.com/watch?v=7rDsRXj9-cU&list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr#t=399))
+</li>
+* Only iOS now, but Android planned <!-- .element: class="fragment" -->
+
+<p class="fragment">
+[Deep Dive into React Native](https://www.youtube.com/watch?v=7rDsRXj9-cU&list=PLb0IAmt7-GS1cbw4qonlQztYV1TAW0sCr&index=2) [video from React conf]  
+[First Impressions using React Native](http://jlongster.com/First-Impressions-using-React-Native) [blog post]
+</p>
+        </script>
+      </section>
+
+
+
 
 
 			</div>

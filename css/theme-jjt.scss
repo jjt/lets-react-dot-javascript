@@ -15,14 +15,14 @@
 $backgroundColor: #222525;
 
 $mainColor: #dddde2;
-$headingColor: #aaaaae;
+$headingColor: #bbbbbe;
 
 $mainFontSize: 38px;
 $mainFont: 'Helvetica Neue', Arial, sans-serif;
 $headingFont: 'Helvetica Neue', Arial, sans-serif;
 $headingTextShadow: none;
 $headingLetterSpacing: normal;
-$headingTextTransform: uppercase;
+$headingTextTransform: none;
 $headingFontWeight: 500;
 $headingLineHeight: 1;
 $linkColor: mix(#42affa, #fff);
@@ -48,4 +48,19 @@ section.has-light-background {
 // EXTRAS
 section.center {
   text-align: center;
+}
+
+.reveal p code,
+.reveal li code{
+  line-height: 1;
+  font-size: 0.9em;
+}
+
+.reveal pre code {
+  max-height: 500px;
+}
+
+
+.reveal h1 {
+  margin-left: -8px;
 }
